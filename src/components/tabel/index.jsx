@@ -25,7 +25,7 @@ function Tabel() {
   };
 
   const deleteAdd = (id) => {
-    if (window.confirm("Delete employee")) {
+    if (window.confirm("Delete Student")) {
       let person = JSON.parse(localStorage.getItem("user")) || [];
       let obj = person?.filter((el) => el?.id !== id);
       localStorage.setItem("user", JSON.stringify(obj));
