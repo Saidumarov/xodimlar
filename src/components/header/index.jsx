@@ -8,7 +8,7 @@ function Header() {
       <header>
         <div className="container">
           <div className="header">
-            <h1 onClick={() => navegate("/")}>Xodimlar</h1>
+            <h1 onClick={() => navegate("/")}>Student</h1>
             <button onClick={() => navegate("/add")}>Add</button>
           </div>
         </div>
