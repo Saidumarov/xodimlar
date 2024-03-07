@@ -3,12 +3,15 @@ import Edit, { Delete } from "../../constants";
 import "./index.scss";
 import { Arry } from "../provider";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import "../filter/index.scss";
+import { FcLikePlaceholder, FcLike } from "react-icons/fc";
 function Tabel() {
   const navegate = useNavigate();
   const [grup, setGrup] = useState("all");
-  const { arry, setArry, id, setId } = useContext(Arry);
+  const { arry, setArry, setId } = useContext(Arry);
   const [data, setData] = useState();
+
   useEffect(() => {
     let arry1 = JSON.parse(localStorage.getItem("user")) || [];
     setData(arry1);
@@ -25,11 +28,12 @@ function Tabel() {
   };
 
   const deleteAdd = (id) => {
-    if (window.confirm("Delete Student")) {
+    if (window.confirm("Delete Contact")) {
       let person = JSON.parse(localStorage.getItem("user")) || [];
       let obj = person?.filter((el) => el?.id !== id);
       localStorage.setItem("user", JSON.stringify(obj));
       setArry(obj);
+      toast.error("Delete Contact");
     }
   };
 
@@ -52,6 +56,48 @@ function Tabel() {
     setData(search);
   };
 
+  // Like function
+  const like = (id) => {
+    let person = JSON.parse(localStorage.getItem("user")) || [];
+    let updatedData = person.map((item) => {
+      if (item.id === id) {
+        return { ...item, liked: true };
+      }
+      return item;
+    });
+    setData(updatedData);
+    localStorage.setItem("user", JSON.stringify(updatedData));
+  };
+
+  // Unlike function
+  const unlike = (id) => {
+    let person = JSON.parse(localStorage.getItem("user")) || [];
+    let updatedData = person.map((item) => {
+      if (item.id === id) {
+        return { ...item, liked: false };
+      }
+      return item;
+    });
+    setData(updatedData);
+    localStorage.setItem("user", JSON.stringify(updatedData));
+  };
+
+  // all
+  const All = () => {
+    let person = JSON.parse(localStorage.getItem("user")) || [];
+    setData(person);
+  };
+  // Favorite
+  const Favorite = () => {
+    let person = JSON.parse(localStorage.getItem("user")) || [];
+    let newperson = person?.filter((el) => {
+      if (el?.liked === true) {
+        return el;
+      }
+    });
+    setData(newperson);
+  };
+
   return (
     <>
       <div className="container">
@@ -65,12 +111,14 @@ function Tabel() {
           </div>
           <div className="filter_item">
             <select value={grup} onChange={handleChange}>
-              <option value="all">All</option>
-              <option value="react32">React 32</option>
-              <option value="react42">React 42</option>
-              <option value="react52">React 52</option>
-              <option value="react45">React 45</option>
+              <option value="all">Select Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
             </select>
+          </div>
+          <div className="btns">
+            <button onClick={All}>All</button>
+            <button onClick={Favorite}>Favorite</button>
           </div>
         </div>
       </div>
@@ -80,8 +128,9 @@ function Tabel() {
             <p>#</p>
             <p>First</p>
             <p>Last</p>
-            <p>Group</p>
-            <p>Does work?</p>
+            <p>Gender</p>
+            <p>Phone</p>
+            <p>Favorite</p>
             <p>Action</p>
           </div>
           {data && data
@@ -91,7 +140,14 @@ function Tabel() {
                   <p>{el?.name}</p>
                   <p>{el?.sur}</p>
                   <p> {el?.grup} </p>
-                  <p>{el?.isChecked ? "☑️" : "❌"} </p>
+                  <p>{el?.phone} </p>
+                  <p
+                    className="like"
+                    onClick={() => (el.liked ? unlike(el.id) : like(el.id))}
+                  >
+                    {el.liked ? <FcLike /> : <FcLikePlaceholder />}
+                  </p>
+
                   <p>
                     <button className="edit" onClick={() => edit(el?.id)}>
                       <Edit />

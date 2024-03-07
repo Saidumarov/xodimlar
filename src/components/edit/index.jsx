@@ -2,17 +2,14 @@ import { useContext, useEffect, useState } from "react";
 import "./index.scss";
 import { useNavigate } from "react-router-dom";
 import { Arry } from "../provider";
+import { toast } from "react-toastify";
 
 function Edit() {
   const [name, setName] = useState("");
   const [sur, setSur] = useState("");
   const [grup, setGrup] = useState("");
-  const [isChecked, setIsChecked] = useState(false);
   const navegate = useNavigate();
-
-  const handleChangeChek = () => {
-    setIsChecked(!isChecked);
-  };
+  const [phone, setPhone] = useState("");
 
   const { setArry, id } = useContext(Arry);
   useEffect(() => {
@@ -24,7 +21,7 @@ function Edit() {
           setGrup(el?.grup),
           setName(el?.name),
           setSur(el?.sur),
-          setIsChecked(el?.isChecked)
+          setPhone(el?.phone)
         );
       }
     });
@@ -37,8 +34,8 @@ function Edit() {
       id,
       name: name,
       grup: grup,
-      isChecked: isChecked,
       sur: sur,
+      phone: phone,
     };
     let personEdit = person.find((el) => el?.id === id);
     let newperson = person?.map((el) => {
@@ -46,11 +43,8 @@ function Edit() {
     });
     localStorage.setItem("user", JSON.stringify(newperson));
     setArry(newperson);
-    setName("");
-    setGrup("");
-    setSur("");
-    setIsChecked(false);
     navegate("/");
+    toast.success("Edit Contact");
   };
   const handleChange = (event) => {
     setGrup(event.target.value);
@@ -80,33 +74,33 @@ function Edit() {
               value={sur}
             />
           </div>
+          <div className="form">
+            <label htmlFor="phone">Phone</label>
+            <input
+              onChange={(e) => setPhone(e.target.value)}
+              type="tel"
+              placeholder="+998-88-765-07-14"
+              id="phone"
+              value={phone}
+            />
+          </div>
           <div className="form_one">
             <div className="form">
               <label htmlFor="email">Group</label>
               <div className="filter_item">
                 <select value={grup} onChange={handleChange}>
-                  <option value="all">All</option>
-                  <option value="react32">React 32</option>
-                  <option value="react42">React 42</option>
-                  <option value="react52">React 52</option>
-                  <option value="react45">React 45</option>
+                  <option value="all">Select Gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
                 </select>
               </div>
-            </div>
-            <div className="form1">
-              <p> Does work?</p>
-              <input
-                type="checkbox"
-                checked={isChecked}
-                onChange={handleChangeChek}
-              />
             </div>
           </div>
         </div>
         <button
           className="save"
           onClick={editAdd}
-          disabled={!name || !grup || !sur}
+          disabled={!name || !grup || grup === "all" || !sur || !phone}
         >
           Save
         </button>

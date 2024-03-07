@@ -2,22 +2,18 @@ import { useContext, useState } from "react";
 import "./index.scss";
 import { useNavigate } from "react-router-dom";
 import { Arry } from "../provider";
-
+import { toast } from "react-toastify";
 function Add() {
   const [name, setName] = useState("");
   const [grup, setGrup] = useState("");
   const [sur, setSur] = useState("");
-  const [isChecked, setIsChecked] = useState(false);
-
-  const handleChangeChek = () => {
-    setIsChecked(!isChecked);
-  };
+  const [phone, setPhone] = useState("");
 
   const navegate = useNavigate();
   const handleChange = (event) => {
     setGrup(event.target.value);
   };
-  const { arry, setArry } = useContext(Arry);
+  const { setArry } = useContext(Arry);
 
   const add = () => {
     let arry = JSON.parse(localStorage.getItem("user")) || [];
@@ -26,16 +22,13 @@ function Add() {
       name,
       sur,
       grup,
-      isChecked,
+      phone,
     };
     let user = [...arry, obj];
     localStorage.setItem("user", JSON.stringify(user));
     setArry(user);
-    setGrup("");
-    setName("");
-    setSur("");
     navegate("/");
-    isChecked(false);
+    toast.success("Add Contact");
   };
 
   return (
@@ -62,33 +55,33 @@ function Add() {
               value={sur}
             />
           </div>
+          <div className="form">
+            <label htmlFor="phone">Phone</label>
+            <input
+              onChange={(e) => setPhone(e.target.value)}
+              type="tel"
+              placeholder="+998-88-765-07-14"
+              id="phone"
+              value={phone}
+            />
+          </div>
           <div className="form_one">
             <div className="form">
               <label htmlFor="email">Group</label>
               <div className="filter_item">
                 <select value={grup} onChange={handleChange}>
-                  <option value="all">All</option>
-                  <option value="react32">React 32</option>
-                  <option value="react42">React 42</option>
-                  <option value="react52">React 52</option>
-                  <option value="react45">React 45</option>
+                  <option value="all">Select Gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
                 </select>
               </div>
-            </div>
-            <div className="form1">
-              <p> Does work?</p>
-              <input
-                type="checkbox"
-                checked={isChecked}
-                onChange={handleChangeChek}
-              />
             </div>
           </div>
         </div>
         <button
           className="save"
           onClick={add}
-          disabled={!name || !grup || !sur}
+          disabled={!name || !grup || !sur || !phone}
         >
           Save
         </button>

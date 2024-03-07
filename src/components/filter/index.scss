@@ -28,3 +28,20 @@
     }
   }
 }
+
+.btns {
+  width: 40%;
+  display: flex;
+  justify-content: left;
+  button {
+    width: 25%;
+    height: 50px;
+    border: none;
+    border-radius: 8px;
+    outline: none;
+    font-size: 17px;
+    background-color: white;
+    margin-left: 20px;
+    cursor: pointer;
+  }
+}
